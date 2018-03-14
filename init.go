@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	appNamespace = "gawkbox"
+	appNamespace = "gawkbox_"
 
 	currentQueries               prometheus.Gauge
 	dbTransactionDurationHistVec *prometheus.HistogramVec
