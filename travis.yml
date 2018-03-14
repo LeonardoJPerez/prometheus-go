@@ -1,0 +1,22 @@
+language: go
+go:
+- 1.9
+install: true
+go_import_path: github.com/leonardojperez/prometheusTelemetry
+env:
+  global:
+  - VERSION="${TRAVIS_BRANCH}_`date +%Y%m%d`_${TRAVIS_BUILD_NUMBER}"
+before_script:
+- go get -u gopkg.in/alecthomas/gometalinter.v2
+- gometalinter.v2 --install &> /dev/null
+script:
+- make build
+after_script:
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker build -t discovry/$APPNAME:$VERSION -f Dockerfile .
+- docker push discovry/$APPNAME:$VERSION
+- if [ "$TRAVIS_BRANCH" == "master" ]; then docker tag discovry/$APPNAME:$VERSION
+  discovry/$APPNAME:latest && docker push discovry/$APPNAME:latest; fi
+notifications:
+  slack:
+    secure: aBUL/z6quhCalMkd1GLRw2/xMFuoCc+xiOgdFojKyw9vlO5ugVhj3u0zvBqXxTJem8E3QkrpWVLfcx4t1/m7EXn8WGdS0sWcGId9ZAN2d1jtcwPFWrNbX0ij9tRxYL2es//ckxd3G0HOqcZZ0nJhbO3+UDmgQw1puDzqZIZpS4Bgmii5C3Z4x5KMrBy7foNm90Jn54khPul/Sx6z4so6vYCb5Wed4X0kC29sRZMELIbB6rhC/HQkUlGrhPSc0fl0lctPmO1vzzXiHfnB4X2XYuv5iVP5LWFhD/hLaF4LsWrc4jx1c0GChQK595hbyRp9aQ1Z+mQdjtp9pnfIJpTQqZy9ITzYVqilh03i6EHCNIbW6+iCHcpHg89MnBaKHwtr8KA8rlxRCQZ1HjtlW/XWdFDQ39dir/DtacXEf0UgQki6neCHTNh8li8FiGntWBeMuRVtxdYOZsk6KGh9Rw0f1ebNSVFFrWWZtFptalPxiAeq+IIYF9igg9Ibn5VR+PnERKKKA7glk+n7mrjtPdQ/QlToKmNqPZk9h7E+6F5+5aY/9cU6dnSATHc+EvKHR/Qg2wieQtwvhx8lhk1gQ5jNj38yemW3MQ7MIUxOq9feLpEFIu3XvYLnXw6E7K/zVxTTA+CfrFwjUUf4tpbHeqRexm7jIGEILWf4Hkfc+U/EKKc=
