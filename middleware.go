@@ -1,4 +1,4 @@
-package middleware
+package prometheusTelemetry
 
 import (
 	"strconv"

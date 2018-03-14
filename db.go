@@ -1,9 +1,8 @@
-package db
+package prometheusTelemetry
 
 import (
 	"time"
 
-	"github.com/discovry/foghorn/telemetry"
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,12 +12,12 @@ var (
 
 func beginTransactionMetering(scope *gorm.Scope) {
 	beginTimer = time.Now()
-	telemetry.IncrementCurrentDbQueries()
+	IncrementCurrentDbQueries()
 }
 
 func endTransactionMetering(scope *gorm.Scope) {
-	telemetry.DecrementCurrentDbQueries()
-	telemetry.ObserveTransaction(scope.TableName(), beginTimer)
+	DecrementCurrentDbQueries()
+	ObserveTransaction(scope.TableName(), beginTimer)
 }
 
 // SetupDatabaseTelemetry :

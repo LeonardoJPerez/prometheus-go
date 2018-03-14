@@ -1,4 +1,4 @@
-package telemetry
+package prometheusTelemetry
 
 import (
 	"fmt"
@@ -25,15 +25,6 @@ const (
 	echoSubsystem = "echo"
 	dbSubsystem   = "db"
 )
-
-// SetupTelemetry :
-func SetupTelemetry(namespace string) {
-	if namespace != "" {
-		appNamespace = fmt.Sprintf("%s_%s", appNamespace, namespace)
-	}
-
-	initialize()
-}
 
 func initialize() {
 	currentQueries = prometheus.NewGauge(prometheus.GaugeOpts{
@@ -77,6 +68,15 @@ func initialize() {
 	prometheus.MustRegister(dbTransactionDurationHistVec)
 	prometheus.MustRegister(httpRequestsCounterVector)
 	prometheus.MustRegister(httpRequestsDurationHistVec)
+}
+
+// SetupTelemetry :
+func SetupTelemetry(namespace string) {
+	if namespace != "" {
+		appNamespace = fmt.Sprintf("%s_%s", appNamespace, namespace)
+	}
+
+	initialize()
 }
 
 // IncrementCurrentDbQueries increments the current query counter by 1.
