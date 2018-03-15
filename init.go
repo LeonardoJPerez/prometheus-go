@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	appNamespace = "gawkbox_"
+	namespace = "gawkbox_"
 
 	currentQueries               prometheus.Gauge
 	dbTransactionDurationHistVec *prometheus.HistogramVec
@@ -28,14 +28,14 @@ const (
 
 func initialize() {
 	currentQueries = prometheus.NewGauge(prometheus.GaugeOpts{
-		Namespace: appNamespace,
+		Namespace: namespace,
 		Subsystem: dbSubsystem,
 		Name:      dbCurrentQueries,
 		Help:      "The current number of database queries being executed or waiting.",
 	})
 
 	dbTransactionDurationHistVec = prometheus.NewHistogramVec(prometheus.HistogramOpts{
-		Namespace: appNamespace,
+		Namespace: namespace,
 		Subsystem: dbSubsystem,
 		Name:      dbTransactionHistVecName,
 		Help:      "The transaction time while querying the database.",
@@ -45,7 +45,7 @@ func initialize() {
 	)
 
 	httpRequestsCounterVector = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Namespace: appNamespace,
+		Namespace: namespace,
 		Subsystem: echoSubsystem,
 		Name:      requestCounterName,
 		Help:      "HTTP requests processed, partitioned by status code, HTTP method and handler.",
@@ -54,7 +54,7 @@ func initialize() {
 	)
 
 	httpRequestsDurationHistVec = prometheus.NewHistogramVec(prometheus.HistogramOpts{
-		Namespace: appNamespace,
+		Namespace: namespace,
 		Subsystem: echoSubsystem,
 		Name:      requestDurationName,
 		Help:      "Duration of request partitioned by method and handler.",
@@ -71,9 +71,9 @@ func initialize() {
 }
 
 // SetupTelemetry :
-func SetupTelemetry(namespace string) {
-	if namespace != "" {
-		appNamespace = fmt.Sprintf("%s_%s", appNamespace, namespace)
+func SetupTelemetry(namespaceSuffix string) {
+	if namespaceSuffix != "" {
+		namespace = fmt.Sprintf("%s%s_", namespace, namespaceSuffix)
 	}
 
 	initialize()
