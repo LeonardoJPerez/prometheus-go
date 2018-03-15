@@ -79,7 +79,7 @@ func SetupTelemetry(namespaceSuffix string) {
 	initialize()
 }
 
-// IncrementCurrentDbQueries increments the current query counter by 1.
+// IncrementCurrentDbQueries increments the current db query counter by 1.
 func IncrementCurrentDbQueries() {
 	if currentQueries == nil {
 		return
@@ -88,7 +88,7 @@ func IncrementCurrentDbQueries() {
 	currentQueries.Inc()
 }
 
-// DecrementCurrentDbQueries decrements the current query counter by 1.
+// DecrementCurrentDbQueries decrements the current db query counter by 1.
 func DecrementCurrentDbQueries() {
 	if currentQueries == nil {
 		return
@@ -97,7 +97,7 @@ func DecrementCurrentDbQueries() {
 	currentQueries.Dec()
 }
 
-// AddRequestMetric creates a series point a specific request.
+// AddRequestMetric creates a series point for an incoming HTTP request.
 func AddRequestMetric(code, method, handler string) {
 	if httpRequestsCounterVector == nil {
 		return
@@ -106,8 +106,8 @@ func AddRequestMetric(code, method, handler string) {
 	httpRequestsCounterVector.WithLabelValues(code, method, handler).Inc()
 }
 
-// ObserveTransaction :
-func ObserveTransaction(operation string, begin time.Time) {
+// ObserveDbTransaction observes a db transaction by key name and duration.
+func ObserveDbTransaction(operation string, begin time.Time) {
 	if dbTransactionDurationHistVec == nil {
 		return
 	}

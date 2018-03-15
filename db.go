@@ -17,7 +17,7 @@ func beginTransactionMetering(scope *gorm.Scope) {
 
 func endTransactionMetering(scope *gorm.Scope) {
 	DecrementCurrentDbQueries()
-	ObserveTransaction(scope.TableName(), beginTimer)
+	ObserveDbTransaction(scope.TableName(), beginTimer)
 }
 
 // SetupDatabaseTelemetry :
